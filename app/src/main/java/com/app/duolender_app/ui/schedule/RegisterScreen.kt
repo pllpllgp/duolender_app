@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -25,27 +26,34 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
+	initialDate: String,
 	onBackClick: () -> Unit,
-	onSaveClick: (title: String, isAllDay: Boolean, startDate: String, startTime: String, endDate: String, endTime: String, memo: String) -> Unit
+	onSaveClick: (title: String, startDate: String, endDate: String, memo: String) -> Unit
 ) {
+	val formatter = DateTimeFormatter.ofPattern("yyyy. M. d. (E)", Locale.KOREAN)
+	val formattedInitialDate = remember(initialDate) {
+		LocalDate.parse(initialDate).format(formatter)
+	}
+
 	var title by remember { mutableStateOf("") }
-	var isAllDay by remember { mutableStateOf(false) }
-	var startDate by remember { mutableStateOf("2026. 6. 18. (목)") }
-	var startTime by remember { mutableStateOf("오전 8:00") }
-	var endDate by remember { mutableStateOf("2026. 6. 18. (목)") }
-	var endTime by remember { mutableStateOf("오전 9:00") }
+	var startDate by remember { mutableStateOf(formattedInitialDate) }
+	var endDate by remember { mutableStateOf(formattedInitialDate) }
 	var memo by remember { mutableStateOf("") }
 
-	// 💡 달력 다이얼로그를 띄울지 말지 결정하는 상태값
 	var showStartDatePicker by remember { mutableStateOf(false) }
 	var showEndDatePicker by remember { mutableStateOf(false) }
 
-	// 💡 선택된 밀리초(Millis)를 "YYYY. M. d. (E)" 형태의 문자열로 바꿔주는 마법의 함수
 	fun convertMillisToDateString(millis: Long): String {
-		// DatePicker는 UTC 기준으로 밀리초를 반환하므로 UTC Zone으로 변환해 주어야 날짜가 틀어지지 않습니다.
 		val date = Instant.ofEpochMilli(millis).atZone(ZoneId.of("UTC")).toLocalDate()
 		val formatter = DateTimeFormatter.ofPattern("yyyy. M. d. (E)", Locale.KOREAN)
 		return date.format(formatter)
+	}
+
+	val context = LocalContext.current
+	val koreanConfig = remember {
+		Configuration(context.resources.configuration).apply {
+			setLocale(Locale.KOREAN)
+		}
 	}
 
 	Scaffold(
@@ -59,7 +67,7 @@ fun RegisterScreen(
 				},
 				actions = {
 					TextButton(
-						onClick = { onSaveClick(title, isAllDay, startDate, startTime, endDate, endTime, memo) },
+						onClick = { onSaveClick(title, startDate, endDate, memo) },
 						enabled = title.isNotBlank()
 					) {
 						Text("저장", fontSize = 16.sp, fontWeight = FontWeight.Bold)
@@ -95,51 +103,28 @@ fun RegisterScreen(
 			Spacer(modifier = Modifier.height(24.dp))
 
 			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceBetween,
-				verticalAlignment = Alignment.CenterVertically
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp),
+				horizontalArrangement = Arrangement.SpaceAround
 			) {
-				Text("하루 종일", fontSize = 16.sp)
-				Switch(checked = isAllDay, onCheckedChange = { isAllDay = it })
-			}
-
-			Spacer(modifier = Modifier.height(16.dp))
-
-			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceBetween
-			) {
-				Text(
-					text = startDate,
-					fontSize = 16.sp,
-					modifier = Modifier.clickable { showStartDatePicker = true } // 💡 클릭 시 달력 열기
-				)
-				if (!isAllDay) {
-					Text(
-						text = startTime,
-						fontSize = 16.sp,
-						modifier = Modifier.clickable { /* TODO: TimePicker 연동 예정 */ }
-					)
+				Column(
+					horizontalAlignment = Alignment.CenterHorizontally,
+					modifier = Modifier.clickable { showStartDatePicker = true }
+				) {
+					Text(text = "시작일", fontSize = 12.sp, color = Color.Gray)
+					Spacer(modifier = Modifier.height(4.dp))
+					Text(text = startDate, fontSize = 16.sp)
 				}
-			}
 
-			Spacer(modifier = Modifier.height(16.dp))
-
-			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceBetween
-			) {
-				Text(
-					text = endDate,
-					fontSize = 16.sp,
-					modifier = Modifier.clickable { showEndDatePicker = true } // 💡 클릭 시 달력 열기
-				)
-				if (!isAllDay) {
-					Text(
-						text = endTime,
-						fontSize = 16.sp,
-						modifier = Modifier.clickable { /* TODO: TimePicker 연동 예정 */ }
-					)
+				// 💡 종료일 블록 (Column 사용)
+				Column(
+					horizontalAlignment = Alignment.CenterHorizontally,
+					modifier = Modifier.clickable { showEndDatePicker = true }
+				) {
+					Text(text = "종료일", fontSize = 12.sp, color = Color.Gray)
+					Spacer(modifier = Modifier.height(4.dp))
+					Text(text = endDate, fontSize = 16.sp)
 				}
 			}
 
@@ -152,56 +137,54 @@ fun RegisterScreen(
 				onValueChange = { memo = it },
 				placeholder = { Text("메모를 입력하세요") },
 				modifier = Modifier.fillMaxWidth().height(150.dp),
+				singleLine = false,
 				colors = OutlinedTextFieldDefaults.colors(
-					focusedBorderColor = Color.Transparent,
-					unfocusedBorderColor = Color.Transparent
+					focusedBorderColor = MaterialTheme.colorScheme.primary,
+					unfocusedBorderColor = Color.LightGray
 				)
 			)
 		}
 	}
 
 	if (showStartDatePicker) {
-		val datePickerState = rememberDatePickerState()
-
-		val context = LocalContext.current
-		val koreanConfig = Configuration(context.resources.configuration).apply {
-			setLocale(Locale.KOREAN)
-		}
-
-		CompositionLocalProvider(LocalConfiguration provides koreanConfig) {
-			DatePickerDialog(
-				onDismissRequest = { showStartDatePicker = false },
-				confirmButton = {
-					TextButton(onClick = {
-						datePickerState.selectedDateMillis?.let { millis ->
-							startDate = convertMillisToDateString(millis)
-						}
-						showStartDatePicker = false
-					}) { Text("확인") }
-				},
-				dismissButton = {
-					TextButton(onClick = { showStartDatePicker = false }) { Text("취소") }
-				}
-			) {
-				DatePicker(state = datePickerState)
-			}
-		}
+		CalendarDatePickerDialog(
+			onDismiss = { showStartDatePicker = false },
+			onConfirm = { millis -> startDate = convertMillisToDateString(millis) },
+			koreanConfig = koreanConfig
+		)
 	}
 
 	if (showEndDatePicker) {
-		val datePickerState = rememberDatePickerState()
+		CalendarDatePickerDialog(
+			onDismiss = { showEndDatePicker = false },
+			onConfirm = { millis -> endDate = convertMillisToDateString(millis) },
+			koreanConfig = koreanConfig
+		)
+	}
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CalendarDatePickerDialog(
+	onDismiss: () -> Unit,
+	onConfirm: (Long) -> Unit,
+	koreanConfig: Configuration
+) {
+	val datePickerState = rememberDatePickerState()
+
+	CompositionLocalProvider(LocalConfiguration provides koreanConfig) {
 		DatePickerDialog(
-			onDismissRequest = { showEndDatePicker = false },
+			onDismissRequest = onDismiss,
 			confirmButton = {
 				TextButton(onClick = {
 					datePickerState.selectedDateMillis?.let { millis ->
-						endDate = convertMillisToDateString(millis)
+						onConfirm(millis)
 					}
-					showEndDatePicker = false
+					onDismiss()
 				}) { Text("확인") }
 			},
 			dismissButton = {
-				TextButton(onClick = { showEndDatePicker = false }) { Text("취소") }
+				TextButton(onClick = onDismiss) { Text("취소") }
 			}
 		) {
 			DatePicker(state = datePickerState)

@@ -31,7 +31,7 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-	onNavigateToRegister: () -> Unit,
+	onNavigateToRegister: (LocalDate) -> Unit,
 ) {
 	var currentMonth by remember { mutableStateOf(YearMonth.now()) }
 	var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -192,7 +192,7 @@ fun MainScreen(
 				Spacer(modifier = Modifier.height(32.dp))
 
 				Button(
-					onClick = { onNavigateToRegister() },
+					onClick = { onNavigateToRegister(selectedDate!!) },
 					modifier = Modifier
 						.fillMaxWidth()
 						.height(56.dp),

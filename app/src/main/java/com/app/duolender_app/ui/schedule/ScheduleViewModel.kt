@@ -5,7 +5,7 @@ import com.app.duolender_app.data.auth.network.ScheduleApiService
 
 class ScheduleViewModel(private val apiService: ScheduleApiService) : ViewModel() {
 	//Schedule 등록 Model
-	fun register(title: String, isAllDay: Boolean, startDate: String, startTime: String, endDate: String, endTime: String, memo: String) {
+	fun register(title: String, startDate: String, endDate: String, memo: String) {
 
 	}
 
