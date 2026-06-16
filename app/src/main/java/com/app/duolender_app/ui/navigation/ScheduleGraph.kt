@@ -1,5 +1,7 @@
 ﻿package com.app.duolender_app.ui.navigation
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -26,8 +28,9 @@ fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 			route = "register/{date}",
 			arguments = listOf(navArgument("date") { type = NavType.StringType })
 		) { backStackEntry ->
+			val context = LocalContext.current
+			val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
 			val dateStr = backStackEntry.arguments?.getString("date") ?: LocalDate.now().toString()
-			val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory())
 
 			RegisterScreen(
 				initialDate = dateStr,

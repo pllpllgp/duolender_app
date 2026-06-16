@@ -2,11 +2,13 @@
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.app.duolender_app.data.auth.network.AuthApiService
 import com.app.duolender_app.ui.AppViewModelFactory
 import com.app.duolender_app.ui.auth.AuthViewModel
 import com.app.duolender_app.ui.auth.LoginScreen
@@ -31,7 +33,8 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 		}
 
 		composable("signup") {
-			val viewModel: AuthViewModel = viewModel(factory = AppViewModelFactory())
+			val context = LocalContext.current
+			val viewModel: AuthViewModel = viewModel(factory = AppViewModelFactory(context))
 			val signupResult by viewModel.signupResult.collectAsState()
 
 			SignupScreen(

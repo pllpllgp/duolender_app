@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -27,10 +28,12 @@ import com.app.duolender_app.ui.AppViewModelFactory
 
 @Composable
 fun LoginScreen(
-	viewModel: AuthViewModel = viewModel(factory = AppViewModelFactory()),
 	onLoginSuccess: () -> Unit,
 	onNavigateToSignup: () -> Unit,
 ) {
+	val context = LocalContext.current
+	val viewModel: AuthViewModel = viewModel(factory = AppViewModelFactory(context))
+
 	val userId by viewModel.userId.collectAsState()
 	val userPw by viewModel.userPw.collectAsState()
 	val loginStatus by viewModel.loginStatus.collectAsState()

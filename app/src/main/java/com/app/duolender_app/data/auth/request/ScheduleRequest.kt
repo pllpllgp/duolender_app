@@ -4,8 +4,9 @@ data class ScheduleRequest (
 	val scheduleId: Int,
 	val userId: String,
 	val scheduleNm: String,
-	val schduleDtm: String,
-	val scheduleGroupId: String,
-	val scheduleGroupNm: String,
-	val scheduleColor: String,
+	val schduleStartDtm: String,
+	val schduleEndDtm: String,
+	val scheduleGroupId: String? = null,
+	val scheduleGroupNm: String? = null,
+	val scheduleColor: String? = null,
 )

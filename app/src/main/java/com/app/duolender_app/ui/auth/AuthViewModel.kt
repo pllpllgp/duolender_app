@@ -3,6 +3,7 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.duolender_app.data.auth.network.AuthApiService
+import com.app.duolender_app.data.auth.network.SessionManager
 import com.app.duolender_app.data.auth.request.AuthRequest
 import com.app.duolender_app.data.auth.request.LoginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val apiService: AuthApiService) : ViewModel() {
+class AuthViewModel(
+	private val apiService: AuthApiService,
+	private val sessionManager: SessionManager,
+) : ViewModel() {
 	enum class ConnectionStatus {
 		CHECKING,
 		CONNECTED,
@@ -69,7 +73,23 @@ class AuthViewModel(private val apiService: AuthApiService) : ViewModel() {
 					val res = apiService.login(req)
 
 					if(res.isSuccessful) {
+						val body = res.body()
+
+						android.util.Log.d("LOGIN", "userId: ${body?.userId}")
+						android.util.Log.d("LOGIN", "userNm: ${body?.userNm}")
+						android.util.Log.d("LOGIN", "userToken: ${body?.userToken}")
+
+						sessionManager.saveSession(
+							userId = body?.userId ?: "",
+							userNm = body?.userNm ?: "",
+							userEmail = body?.userEmail ?: "",
+							userPhone = body?.userPhone ?: "",
+							userToken = body?.userToken ?: "",
+
+						)
+
 						_loginStatus.value = true // 성공 시뮬레이션
+
 					} else {
 						_loginStatus.value = false
 					}
