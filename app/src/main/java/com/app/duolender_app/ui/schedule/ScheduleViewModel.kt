@@ -56,15 +56,14 @@ class ScheduleViewModel(
 	private val _registerStatus = MutableStateFlow<Boolean?>(null)
 	val registerStatus: StateFlow<Boolean?> = _registerStatus.asStateFlow()
 
-	fun register(title: String, startDate: String, endDate: String, memo: String) {
-		Log.d("ScheduleVM", "요청: startDate=${startDate}")
+	fun register(title: String, scheduleDtm: String, memo: String) {
+		Log.d("ScheduleVM", "요청: startDate=${scheduleDtm}")
 		viewModelScope.launch {
 			try {
 				val req = ScheduleRequest(
 					userId = sessionManager.getUserId(),
 					scheduleNm = title,
-					scheduleStartDtm = startDate,
-					scheduleEndDtm = endDate,
+					scheduleDtm = scheduleDtm,
 					scheduleMemo = memo,
 					scheduleGroupId = "",
 					scheduleGroupNm = "",

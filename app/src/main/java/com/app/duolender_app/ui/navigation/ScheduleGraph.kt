@@ -36,17 +36,16 @@ fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 			val dateStr = backStackEntry.arguments?.getString("date") ?: LocalDate.now().toString()
 
 			RegisterScreen(
-				initialDate = dateStr,
+				scheduleDtm = dateStr,
 				onBackClick = {
 					navController.popBackStack()
 				},
-				onSaveClick = { title, startDate, endDate, memo ->
+				onSaveClick = { title, scheduleDtm, memo ->
 					val fmt = DateTimeFormatter.ofPattern("yyyyMMdd")
-					val inputFmt = DateTimeFormatter.ofPattern("yyyy. M. d. (E)", Locale.KOREAN)
-					val startDtm = LocalDate.parse(startDate, inputFmt).format(fmt)
-					val endDtm = LocalDate.parse(endDate, inputFmt).format(fmt)
+					val inputFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+					val scheduleDtm = LocalDate.parse(scheduleDtm, inputFmt).format(fmt)
 
-					viewModel.register(title, startDtm, endDtm, memo)
+					viewModel.register(title, scheduleDtm, memo)
 				},
 				onRegisterSuccess = {
 					navController.navigate("home")

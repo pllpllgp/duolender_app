@@ -46,7 +46,7 @@ fun MainScreen(
 		viewModel.loadScheduleList(yearMonth)
 	}
 
-	val schedulesByDate = scheduleList.groupBy { it.scheduleStartDtm.take(8) }
+	val schedulesByDate = scheduleList.groupBy { it.scheduleDtm.take(8) }
 
 	Scaffold(
 		topBar = {
@@ -196,7 +196,7 @@ fun MainScreen(
 							Spacer(modifier = Modifier.width(16.dp))
 							Column {
 								Text(text = schedule.scheduleNm, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-								Text(text = schedule.scheduleStartDtm, fontSize = 14.sp, color = Color.Gray)
+								Text(text = schedule.scheduleDtm, fontSize = 14.sp, color = Color.Gray)
 							}
 						}
 					}
