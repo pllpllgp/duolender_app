@@ -40,6 +40,9 @@ fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 				onSaveClick = { title, startDate, endDate, memo ->
 					viewModel.register(title, startDate, endDate, memo)
 				},
+				onRegisterSuccess = {
+					navController.navigate("home")
+				}
 			)
 		}
 

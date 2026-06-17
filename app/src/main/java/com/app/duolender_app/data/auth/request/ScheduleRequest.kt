@@ -6,6 +6,7 @@ data class ScheduleRequest (
 	val scheduleNm: String,
 	val schduleStartDtm: String,
 	val schduleEndDtm: String,
+	val scheduleMemo: String,
 	val scheduleGroupId: String? = null,
 	val scheduleGroupNm: String? = null,
 	val scheduleColor: String? = null,

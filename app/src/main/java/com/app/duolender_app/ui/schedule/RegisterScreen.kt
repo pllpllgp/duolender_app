@@ -17,6 +17,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.duolender_app.ui.AppViewModelFactory
+import com.app.duolender_app.ui.auth.AuthViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -28,8 +31,20 @@ import java.util.Locale
 fun RegisterScreen(
 	initialDate: String,
 	onBackClick: () -> Unit,
-	onSaveClick: (title: String, startDate: String, endDate: String, memo: String) -> Unit
+	onSaveClick: (title: String, startDate: String, endDate: String, memo: String) -> Unit,
+	onRegisterSuccess: () -> Unit,
 ) {
+	val context = LocalContext.current
+	val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
+
+	val registerStatus by viewModel.registerStatus.collectAsState()
+
+	LaunchedEffect(registerStatus) {
+		if (registerStatus == true) {
+			onRegisterSuccess()
+		}
+	}
+
 	val formatter = DateTimeFormatter.ofPattern("yyyy. M. d. (E)", Locale.KOREAN)
 	val formattedInitialDate = remember(initialDate) {
 		LocalDate.parse(initialDate).format(formatter)
@@ -49,7 +64,6 @@ fun RegisterScreen(
 		return date.format(formatter)
 	}
 
-	val context = LocalContext.current
 	val koreanConfig = remember {
 		Configuration(context.resources.configuration).apply {
 			setLocale(Locale.KOREAN)

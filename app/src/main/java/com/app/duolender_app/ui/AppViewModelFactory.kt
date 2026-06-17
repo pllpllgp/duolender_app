@@ -20,7 +20,7 @@ class AppViewModelFactory(context: Context) : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(AuthViewModel::class.java) ->
                 AuthViewModel(authApiService, sessionManager) as T
 			modelClass.isAssignableFrom(ScheduleViewModel::class.java) ->
-				ScheduleViewModel(scheduleApiService) as T
+				ScheduleViewModel(scheduleApiService, sessionManager) as T
             else -> throw IllegalArgumentException("Unknown ViewModel: $modelClass")
         }
     }

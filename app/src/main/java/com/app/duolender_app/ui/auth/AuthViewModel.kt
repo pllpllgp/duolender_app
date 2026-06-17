@@ -75,10 +75,6 @@ class AuthViewModel(
 					if(res.isSuccessful) {
 						val body = res.body()
 
-						android.util.Log.d("LOGIN", "userId: ${body?.userId}")
-						android.util.Log.d("LOGIN", "userNm: ${body?.userNm}")
-						android.util.Log.d("LOGIN", "userToken: ${body?.userToken}")
-
 						sessionManager.saveSession(
 							userId = body?.userId ?: "",
 							userNm = body?.userNm ?: "",
