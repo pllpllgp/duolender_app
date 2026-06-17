@@ -10,6 +10,10 @@ data class ScheduleRequest (
 	val scheduleGroupId: String? = null,
 	val scheduleGroupNm: String? = null,
 	val scheduleColor: String? = null,
+	val scheduleCrtnId:  String? = null,
+	val scheduleCrtnDtm:  String? = null,
+	val scheduleChngId:  String? = null,
+	val scheduleChngDtm:  String? = null,
 
 	val schScheduleDate: String? = null,
 )

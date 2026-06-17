@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.String
 import android.util.Log
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class ScheduleViewModel(
 	private val apiService: ScheduleApiService,
@@ -20,6 +22,8 @@ class ScheduleViewModel(
 	//Schedule List
 	private val _scheduleList = MutableStateFlow<List<ScheduleResponse>>(emptyList())
 	val scheduleList: StateFlow<List<ScheduleResponse>> = _scheduleList.asStateFlow()
+
+	val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
 	fun loadScheduleList(yearMonth: String) {
 		viewModelScope.launch {
@@ -53,10 +57,10 @@ class ScheduleViewModel(
 	val registerStatus: StateFlow<Boolean?> = _registerStatus.asStateFlow()
 
 	fun register(title: String, startDate: String, endDate: String, memo: String) {
+		Log.d("ScheduleVM", "요청: startDate=${startDate}")
 		viewModelScope.launch {
 			try {
 				val req = ScheduleRequest(
-					scheduleId = 0,
 					userId = sessionManager.getUserId(),
 					scheduleNm = title,
 					scheduleStartDtm = startDate,
@@ -65,6 +69,8 @@ class ScheduleViewModel(
 					scheduleGroupId = "",
 					scheduleGroupNm = "",
 					scheduleColor = "",
+					scheduleCrtnId = sessionManager.getUserId(),
+					scheduleCrtnDtm = today,
 				)
 
 				val res = apiService.scheduleRegister(req)

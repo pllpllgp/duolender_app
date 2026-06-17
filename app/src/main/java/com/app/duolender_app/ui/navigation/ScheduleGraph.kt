@@ -13,6 +13,8 @@ import com.app.duolender_app.ui.schedule.MainScreen
 import com.app.duolender_app.ui.schedule.RegisterScreen
 import com.app.duolender_app.ui.schedule.ScheduleViewModel
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 	navigation(startDestination = "home", route = "schedule") {
@@ -39,7 +41,12 @@ fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 					navController.popBackStack()
 				},
 				onSaveClick = { title, startDate, endDate, memo ->
-					viewModel.register(title, startDate, endDate, memo)
+					val fmt = DateTimeFormatter.ofPattern("yyyyMMdd")
+					val inputFmt = DateTimeFormatter.ofPattern("yyyy. M. d. (E)", Locale.KOREAN)
+					val startDtm = LocalDate.parse(startDate, inputFmt).format(fmt)
+					val endDtm = LocalDate.parse(endDate, inputFmt).format(fmt)
+
+					viewModel.register(title, startDtm, endDtm, memo)
 				},
 				onRegisterSuccess = {
 					navController.navigate("home")
