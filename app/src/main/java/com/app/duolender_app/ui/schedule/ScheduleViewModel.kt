@@ -5,16 +5,49 @@ import androidx.lifecycle.viewModelScope
 import com.app.duolender_app.data.auth.network.ScheduleApiService
 import com.app.duolender_app.data.auth.network.SessionManager
 import com.app.duolender_app.data.auth.request.ScheduleRequest
+import com.app.duolender_app.data.auth.response.ScheduleResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.String
+import android.util.Log
 
 class ScheduleViewModel(
 	private val apiService: ScheduleApiService,
 	private val sessionManager: SessionManager,
 ) : ViewModel() {
+	//Schedule List
+	private val _scheduleList = MutableStateFlow<List<ScheduleResponse>>(emptyList())
+	val scheduleList: StateFlow<List<ScheduleResponse>> = _scheduleList.asStateFlow()
+
+	fun loadScheduleList(yearMonth: String) {
+		viewModelScope.launch {
+			try{
+				val req = ScheduleRequest(
+					userId = sessionManager.getUserId(),
+					schScheduleDate = yearMonth
+				)
+				Log.d("ScheduleVM", "요청: userId=${req.userId}, yearMonth=$yearMonth")
+
+				val res = apiService.scheduleList(req)
+
+				if(res.isSuccessful) {
+					val list = res.body() ?: emptyList()
+					_scheduleList.value = list
+					Log.d("ScheduleVM", "성공: ${list.size}건 → $list")
+				} else {
+					Log.e("ScheduleVM", "실패: HTTP ${res.code()} ${res.errorBody()?.string()}")
+				}
+
+			} catch (e: Exception) {
+				Log.e("ScheduleVM", "에러: ${e.message}", e)
+			}
+		}
+	}
+
+
+
 	//Schedule 등록 Model
 	private val _registerStatus = MutableStateFlow<Boolean?>(null)
 	val registerStatus: StateFlow<Boolean?> = _registerStatus.asStateFlow()
@@ -26,8 +59,8 @@ class ScheduleViewModel(
 					scheduleId = 0,
 					userId = sessionManager.getUserId(),
 					scheduleNm = title,
-					schduleStartDtm = startDate,
-					schduleEndDtm = endDate,
+					scheduleStartDtm = startDate,
+					scheduleEndDtm = endDate,
 					scheduleMemo = memo,
 					scheduleGroupId = "",
 					scheduleGroupNm = "",

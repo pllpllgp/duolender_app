@@ -1,6 +1,5 @@
 ﻿package com.app.duolender_app.ui.navigation
 
-import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -10,7 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.app.duolender_app.ui.AppViewModelFactory
-import com.app.duolender_app.ui.schedule.*
+import com.app.duolender_app.ui.schedule.MainScreen
+import com.app.duolender_app.ui.schedule.RegisterScreen
+import com.app.duolender_app.ui.schedule.ScheduleViewModel
 import java.time.LocalDate
 
 fun NavGraphBuilder.scheduleGraph(navController: NavController) {

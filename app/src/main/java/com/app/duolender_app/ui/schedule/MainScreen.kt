@@ -15,13 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.app.duolender_app.data.main.Schedule
 import com.app.duolender_app.ui.AppViewModelFactory
 import java.time.LocalDate
 import java.time.YearMonth
@@ -33,15 +33,20 @@ import java.util.Locale
 fun MainScreen(
 	onNavigateToRegister: (LocalDate) -> Unit,
 ) {
+	val context = LocalContext.current
+	val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
+	val scheduleList by viewModel.scheduleList.collectAsState()
+
 	var currentMonth by remember { mutableStateOf(YearMonth.now()) }
 	var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
 	var showBottomSheet by remember { mutableStateOf(false) }
 
-	val mockSchedules = mapOf(
-		LocalDate.of(2026, 6, 18) to listOf(Schedule(1, "자웅군", "오전 8:00 - 오전 9:00")),
-		LocalDate.of(2026, 6, 20) to listOf(Schedule(2, "은숙이 오프", "종일")),
-		LocalDate.of(2026, 6, 25) to listOf(Schedule(3, "6.25 전쟁일", "기념일", 0xFFBDBDBD))
-	)
+	LaunchedEffect(currentMonth) {
+		val yearMonth = "${currentMonth.year}${currentMonth.monthValue.toString().padStart(2, '0')}"
+		viewModel.loadScheduleList(yearMonth)
+	}
+
+	val schedulesByDate = scheduleList.groupBy { it.scheduleStartDtm.take(8) }
 
 	Scaffold(
 		topBar = {
@@ -102,7 +107,8 @@ fun MainScreen(
 					val date = currentMonth.atDay(day + 1)
 					val isSunday = date.dayOfWeek.value == 7
 					val isSaturday = date.dayOfWeek.value == 6
-					val daySchedules = mockSchedules[date] ?: emptyList()
+					val dateKey = date.format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"))
+					val daySchedules = schedulesByDate[dateKey] ?: emptyList()
 
 					Column(
 						modifier = Modifier
@@ -124,13 +130,16 @@ fun MainScreen(
 
 						daySchedules.forEach { schedule ->
 							Text(
-								text = schedule.title,
+								text = schedule.scheduleNm,
 								fontSize = 10.sp,
 								maxLines = 1,
 								overflow = TextOverflow.Ellipsis,
 								modifier = Modifier
 									.fillMaxWidth()
-									.background(Color(schedule.colorCode).copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+									.background(
+										(schedule.scheduleColor?.let { Color(android.graphics.Color.parseColor(it)) } ?: Color.Gray).copy(alpha = 0.2f),
+										RoundedCornerShape(4.dp)
+									)
 									.padding(horizontal = 2.dp, vertical = 1.dp),
 								textAlign = TextAlign.Center
 							)
@@ -144,7 +153,8 @@ fun MainScreen(
 	if (showBottomSheet && selectedDate != null) {
 		val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 		val dayOfWeekStr = selectedDate!!.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN)
-		val schedulesForDay = mockSchedules[selectedDate] ?: emptyList()
+		val selectedKey = selectedDate!!.format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd"))
+		val schedulesForDay = schedulesByDate[selectedKey] ?: emptyList()
 
 		ModalBottomSheet(
 			onDismissRequest = { showBottomSheet = false },
@@ -178,12 +188,15 @@ fun MainScreen(
 								modifier = Modifier
 									.width(4.dp)
 									.height(40.dp)
-									.background(Color(schedule.colorCode), RoundedCornerShape(2.dp))
+									.background(
+										schedule.scheduleColor?.let { Color(android.graphics.Color.parseColor(it)) } ?: Color.Gray,
+										RoundedCornerShape(2.dp)
+									)
 							)
 							Spacer(modifier = Modifier.width(16.dp))
 							Column {
-								Text(text = schedule.title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-								Text(text = schedule.time, fontSize = 14.sp, color = Color.Gray)
+								Text(text = schedule.scheduleNm, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+								Text(text = schedule.scheduleStartDtm, fontSize = 14.sp, color = Color.Gray)
 							}
 						}
 					}

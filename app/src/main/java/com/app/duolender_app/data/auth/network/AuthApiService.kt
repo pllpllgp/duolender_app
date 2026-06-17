@@ -10,16 +10,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthApiService {
-	@GET("api/auth/duoConnect")
+	@GET("auth/duoConnect")
 	suspend fun connect(): Response<ResponseBody>
 
-	@POST("api/auth/login")
+	@POST("auth/login")
 	suspend fun login(
 		@Body request: LoginRequest
 	): Response<LoginResponse>
 
 	//회원가입
-	@POST("api/auth/signup")
+	@POST("auth/signup")
 	suspend fun signup(
 		@Body request: AuthRequest
 	): Response<ResponseBody>
