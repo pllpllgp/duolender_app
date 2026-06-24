@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.app.duolender_app.data.auth.network.AuthApiService
 import com.app.duolender_app.ui.AppViewModelFactory
 import com.app.duolender_app.ui.auth.AuthViewModel
 import com.app.duolender_app.ui.auth.LoginScreen
@@ -42,7 +41,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 				onSignupClick = { userId, userPw, userNm, userEmail, userPhone ->
 					viewModel.signup(userId, userPw, userNm, userEmail, userPhone)
 				},
-				onBackToLogin = {
+				onBack = {
 					navController.popBackStack()
 				}
 			)

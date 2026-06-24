@@ -14,7 +14,6 @@ import com.app.duolender_app.ui.schedule.RegisterScreen
 import com.app.duolender_app.ui.schedule.ScheduleViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 	navigation(startDestination = "home", route = "schedule") {

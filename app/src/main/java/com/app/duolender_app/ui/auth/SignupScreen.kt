@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 fun SignupScreen(
 	signupResult: Result<String>?,
 	onSignupClick: (userId: String, userPw: String, userNm: String, userEmail: String, userPhone: String) -> Unit,
-	onBackToLogin: () -> Unit,
+	onBack: () -> Unit,
 ) {
 	var userId by remember { mutableStateOf("") }
 	var userPw by remember { mutableStateOf("") }
@@ -31,7 +31,7 @@ fun SignupScreen(
 
 	LaunchedEffect(signupResult) {
 		when {
-			signupResult?.isSuccess == true -> onBackToLogin()
+			signupResult?.isSuccess == true -> onBack()
 			signupResult?.isFailure == true -> errorMessage = signupResult.exceptionOrNull()?.message ?: "오류가 발생했습니다."
 		}
 	}
@@ -136,7 +136,7 @@ fun SignupScreen(
 		Spacer(modifier = Modifier.height(16.dp))
 
 		// 로그인 화면으로 돌아가기 버튼
-		TextButton(onClick = onBackToLogin) {
+		TextButton(onClick = onBack) {
 			Text("이미 계정이 있으신가요? 로그인하기")
 		}
 	}
