@@ -1,5 +1,6 @@
 package com.app.duolender_app.ui.group
 
+import android.util.Log
 import com.app.duolender_app.data.group.network.GroupApiService
 import com.app.duolender_app.data.network.SessionManager
 import androidx.lifecycle.ViewModel
@@ -27,7 +28,7 @@ class GroupViewModel(
 					groupCrtnId = sessionManager.getUserId(),
 					groupMemo = groupMemo,
 				)
-
+				Log.d("ScheduleVM", "요청: userId=${req.groupCrtnId}")
 				val res = apiService.groupRegister(req)
 
 				if(res.isSuccessful) {

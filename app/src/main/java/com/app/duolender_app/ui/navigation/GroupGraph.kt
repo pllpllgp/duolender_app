@@ -32,6 +32,9 @@ fun NavGraphBuilder.groupGraph(navController: NavController) {
 				},
 				onSaveClick = {groupNm, groupMemo ->
 					viewModel.groupRegister(groupNm, groupMemo)
+				},
+				onRegisterSuccess = {
+					navController.navigate("groupMain")
 				}
 			)
 		}

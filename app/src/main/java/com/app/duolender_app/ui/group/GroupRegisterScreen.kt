@@ -20,22 +20,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.duolender_app.ui.AppViewModelFactory
+import com.app.duolender_app.ui.schedule.ScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupRegisterScreen(
 	onBack: () -> Unit,
 	onSaveClick: (groupNm: String, groupMemo: String,) -> Unit,
+	onRegisterSuccess: () -> Unit,
 ) {
+	val context = LocalContext.current
+	val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
+
+	val registerStatus by viewModel.registerStatus.collectAsState()
+
+	LaunchedEffect(registerStatus) {
+		if (registerStatus == true) {
+			onRegisterSuccess()
+		}
+	}
+
 	var groupName by remember { mutableStateOf("") }
 	var groupMemo by remember { mutableStateOf("") }
 
