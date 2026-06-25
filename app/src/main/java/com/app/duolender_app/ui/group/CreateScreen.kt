@@ -41,9 +41,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CreateScreen(onBack: () -> Unit) {
 	var groupName by remember { mutableStateOf("") }
-	var groupDescription by remember { mutableStateOf("") }
-	var selectedCategory by remember { mutableStateOf("운동") }
-	var isPublic by remember { mutableStateOf(true) }
+	var groupMemo by remember { mutableStateOf("") }
 
 	Scaffold(
 		topBar = {
@@ -79,44 +77,14 @@ fun CreateScreen(onBack: () -> Unit) {
 			Spacer(modifier = Modifier.height(16.dp))
 
 			OutlinedTextField(
-				value = groupDescription,
-				onValueChange = { groupDescription = it },
+				value = groupMemo,
+				onValueChange = { groupMemo = it },
 				label = { Text("그룹 소개") },
 				modifier = Modifier
 					.fillMaxWidth()
 					.height(120.dp),
 				shape = RoundedCornerShape(12.dp)
 			)
-
-			Spacer(modifier = Modifier.height(24.dp))
-
-			Text(
-				"카테고리 선택",
-				modifier = Modifier.fillMaxWidth(),
-				style = MaterialTheme.typography.titleSmall,
-				fontWeight = FontWeight.SemiBold
-			)
-
-			Spacer(modifier = Modifier.height(24.dp))
-
-			Row(
-				modifier = Modifier
-					.fillMaxWidth()
-					.clip(RoundedCornerShape(12.dp))
-					.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-					.padding(16.dp),
-				verticalAlignment = Alignment.CenterVertically,
-				horizontalArrangement = Arrangement.SpaceBetween
-			) {
-				Column {
-					Text("공개 그룹 설정", fontWeight = FontWeight.Bold)
-					Text(if (isPublic) { "누구나 검색하고 가입할 수 있습니다"}
-								else { "초대된 인원만 가입할 수 있습니다"},
-						style = MaterialTheme.typography.bodySmall
-					)
-				}
-				Switch(checked = isPublic, onCheckedChange = { isPublic = it })
-			}
 
 			Spacer(modifier = Modifier.weight(1f))
 			Spacer(modifier = Modifier.height(32.dp))
