@@ -2,10 +2,10 @@ package com.app.duolender_app.ui.schedule
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.duolender_app.data.auth.network.ScheduleApiService
-import com.app.duolender_app.data.auth.network.SessionManager
-import com.app.duolender_app.data.auth.request.ScheduleRequest
-import com.app.duolender_app.data.auth.response.ScheduleResponse
+import com.app.duolender_app.data.schedule.network.ScheduleApiService
+import com.app.duolender_app.data.network.SessionManager
+import com.app.duolender_app.data.schedule.request.ScheduleRequest
+import com.app.duolender_app.data.schedule.response.ScheduleResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,8 +56,7 @@ class ScheduleViewModel(
 	private val _registerStatus = MutableStateFlow<Boolean?>(null)
 	val registerStatus: StateFlow<Boolean?> = _registerStatus.asStateFlow()
 
-	fun register(title: String, scheduleDtm: String, memo: String) {
-		Log.d("ScheduleVM", "요청: startDate=${scheduleDtm}")
+	fun scheduleRegister(title: String, scheduleDtm: String, memo: String) {
 		viewModelScope.launch {
 			try {
 				val req = ScheduleRequest(

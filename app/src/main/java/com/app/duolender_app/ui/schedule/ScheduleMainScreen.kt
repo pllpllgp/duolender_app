@@ -30,7 +30,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
+fun ScheduleMainScreen(
 	onNavigateToRegister: (LocalDate) -> Unit,
 ) {
 	val context = LocalContext.current

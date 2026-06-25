@@ -9,32 +9,32 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.app.duolender_app.ui.AppViewModelFactory
-import com.app.duolender_app.ui.schedule.MainScreen
-import com.app.duolender_app.ui.schedule.RegisterScreen
+import com.app.duolender_app.ui.schedule.ScheduleMainScreen
+import com.app.duolender_app.ui.schedule.ScheduleRegisterScreen
 import com.app.duolender_app.ui.schedule.ScheduleViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.scheduleGraph(navController: NavController) {
-	navigation(startDestination = "home", route = "schedule") {
+	navigation(startDestination = "scheduleMain", route = "schedule") {
 
-		composable("home") {
-			MainScreen(
+		composable("scheduleMain") {
+			ScheduleMainScreen(
 				onNavigateToRegister = { date ->
-					navController.navigate("register/${date}")
+					navController.navigate("scheduleRegister/${date}")
 				}
 			)
 		}
 
 		composable(
-			route = "register/{date}",
+			route = "scheduleRegister/{date}",
 			arguments = listOf(navArgument("date") { type = NavType.StringType })
 		) { backStackEntry ->
 			val context = LocalContext.current
 			val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
 			val dateStr = backStackEntry.arguments?.getString("date") ?: LocalDate.now().toString()
 
-			RegisterScreen(
+			ScheduleRegisterScreen(
 				scheduleDtm = dateStr,
 				onBackClick = {
 					navController.popBackStack()
@@ -44,10 +44,10 @@ fun NavGraphBuilder.scheduleGraph(navController: NavController) {
 					val inputFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 					val scheduleDtm = LocalDate.parse(scheduleDtm, inputFmt).format(fmt)
 
-					viewModel.register(title, scheduleDtm, memo)
+					viewModel.scheduleRegister(title, scheduleDtm, memo)
 				},
 				onRegisterSuccess = {
-					navController.navigate("home")
+					navController.navigate("scheduleMain")
 				}
 			)
 		}

@@ -3,9 +3,8 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.duolender_app.data.auth.network.AuthApiService
-import com.app.duolender_app.data.auth.network.SessionManager
+import com.app.duolender_app.data.network.SessionManager
 import com.app.duolender_app.data.auth.request.AuthRequest
-import com.app.duolender_app.data.auth.request.LoginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -65,7 +64,7 @@ class AuthViewModel(
 		viewModelScope.launch {
 			if (userId.value.isNotBlank() && userPw.value.isNotBlank()) {
 				try {
-					val req = LoginRequest(
+					val req = AuthRequest(
 						userId = userId.value,
 						userPw = userPw.value,
 					)

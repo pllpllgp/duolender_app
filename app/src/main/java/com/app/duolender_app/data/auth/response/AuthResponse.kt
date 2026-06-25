@@ -1,6 +1,6 @@
 package com.app.duolender_app.data.auth.response
 
-data class LoginResponse (
+data class AuthResponse (
 	val userId: String,
 	val userNm: String,
 	val userEmail: String,

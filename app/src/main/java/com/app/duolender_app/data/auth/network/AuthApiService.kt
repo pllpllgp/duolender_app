@@ -1,8 +1,7 @@
-﻿package com.app.duolender_app.data.auth.network
+package com.app.duolender_app.data.auth.network
 
 import com.app.duolender_app.data.auth.request.AuthRequest
-import com.app.duolender_app.data.auth.request.LoginRequest
-import com.app.duolender_app.data.auth.response.LoginResponse
+import com.app.duolender_app.data.auth.response.AuthResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,8 +14,8 @@ interface AuthApiService {
 
 	@POST("auth/login")
 	suspend fun login(
-		@Body request: LoginRequest
-	): Response<LoginResponse>
+		@Body request: AuthRequest
+	): Response<AuthResponse>
 
 	//회원가입
 	@POST("auth/signup")

@@ -1,4 +1,4 @@
-package com.app.duolender_app.data.auth.network
+package com.app.duolender_app.data.network
 
 import android.content.Context
 

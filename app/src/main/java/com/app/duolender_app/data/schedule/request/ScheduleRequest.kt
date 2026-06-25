@@ -1,4 +1,4 @@
-package com.app.duolender_app.data.auth.request
+package com.app.duolender_app.data.schedule.request
 
 data class ScheduleRequest (
 	val scheduleId: Int? = null,

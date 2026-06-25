@@ -1,4 +1,4 @@
-package com.app.duolender_app.data.auth.response
+package com.app.duolender_app.data.schedule.response
 
 data class ScheduleResponse(
 	val scheduleId: Int,

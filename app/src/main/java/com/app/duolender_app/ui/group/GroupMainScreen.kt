@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupScreen(
+fun GroupMainScreen(
 	onNavigateToCreate: () -> Unit,
 ) {
 	var searchQuery by remember { mutableStateOf("") }

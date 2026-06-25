@@ -1,11 +1,10 @@
-package com.app.duolender_app.data.auth.network
+package com.app.duolender_app.data.schedule.network
 
-import com.app.duolender_app.data.auth.request.ScheduleRequest
-import com.app.duolender_app.data.auth.response.ScheduleResponse
+import com.app.duolender_app.data.schedule.request.ScheduleRequest
+import com.app.duolender_app.data.schedule.response.ScheduleResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface ScheduleApiService {
