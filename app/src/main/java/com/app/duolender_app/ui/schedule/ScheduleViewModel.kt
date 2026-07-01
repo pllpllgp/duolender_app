@@ -51,8 +51,7 @@ class ScheduleViewModel(
 	}
 
 
-
-	//Schedule 등록 Model
+	//Schedule Register
 	private val _registerStatus = MutableStateFlow<Boolean?>(null)
 	val registerStatus: StateFlow<Boolean?> = _registerStatus.asStateFlow()
 
@@ -68,7 +67,6 @@ class ScheduleViewModel(
 					scheduleGroupNm = "",
 					scheduleColor = "",
 					scheduleCrtnId = sessionManager.getUserId(),
-					scheduleCrtnDtm = today,
 				)
 
 				val res = apiService.scheduleRegister(req)

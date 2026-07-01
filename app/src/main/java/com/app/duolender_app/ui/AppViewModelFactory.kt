@@ -13,12 +13,12 @@ import com.app.duolender_app.ui.group.GroupViewModel
 import com.app.duolender_app.ui.schedule.ScheduleViewModel
 
 class AppViewModelFactory(context: Context) : ViewModelProvider.Factory {
-    private val authApiService = RetrofitClient.instance.create(AuthApiService::class.java)
-	private val scheduleApiService = RetrofitClient.instance.create(ScheduleApiService::class.java)
-
-	private val groupApiService = RetrofitClient.instance.create(GroupApiService::class.java)
-
 	private val sessionManager = SessionManager(context)
+	private val retrofit = RetrofitClient.getInstance(sessionManager)
+
+	private val authApiService = retrofit.create(AuthApiService::class.java)
+	private val scheduleApiService = retrofit.create(ScheduleApiService::class.java)
+	private val groupApiService = retrofit.create(GroupApiService::class.java)
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {

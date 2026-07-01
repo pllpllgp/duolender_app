@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.duolender_app.ui.AppViewModelFactory
-import com.app.duolender_app.ui.schedule.ScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +43,7 @@ fun GroupRegisterScreen(
 	onRegisterSuccess: () -> Unit,
 ) {
 	val context = LocalContext.current
-	val viewModel: ScheduleViewModel = viewModel(factory = AppViewModelFactory(context))
+	val viewModel: GroupViewModel = viewModel(factory = AppViewModelFactory(context))
 
 	val registerStatus by viewModel.registerStatus.collectAsState()
 
